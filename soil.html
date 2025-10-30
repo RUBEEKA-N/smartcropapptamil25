@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ஸ்மார்ட் பயிர் ஆலோசனை</title>
+  <style>
+    body {
+      font-family: 'Noto Sans Tamil', sans-serif;
+      background-color: #f2fbe0;
+      color: #333;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      color: green;
+    }
+    .card {
+      background: white;
+      margin: 10px auto;
+      padding: 15px;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      text-align: left;
+    }
+    button {
+      background: green;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌾 ஸ்மார்ட் பயிர் ஆலோசனை பயன்பாடு</h1>
+  <p>உங்கள் மண் தகவலை வழங்கி பயிர் மற்றும் உர பரிந்துரையை பெறுங்கள்.</p>
+
+  <div class="card">
+    <label>மண் pH மதிப்பு:</label><br>
+    <input type="number" id="ph" min="1" max="14" step="0.1">
+    <br><br>
+    <button onclick="recommendCrop()">பயிர் பரிந்துரை</button>
+    <p id="result"></p>
+  </div>
+
+  <div class="card">
+    <h3>🌦 வானிலை தகவல்</h3>
+    <button onclick="getWeather()">இப்போதைய வானிலை பார்க்க</button>
+    <p id="weather"></p>
+  </div>
+
+  <script>
+    // பயிர் பரிந்துரை
+    function recommendCrop() {
+      const ph = parseFloat(document.getElementById('ph').value);
+      let crop = '';
+
+      if (ph >= 6 && ph <= 7.5) crop = 'நெல், மக்காச்சோளம், பருப்பு';
+      else if (ph < 6) crop = 'கடலை, மிளகாய், வெண்டை';
+      else crop = 'வெள்ளரி, கத்தரிக்காய், உருளைக்கிழங்கு';
+
+      document.getElementById('result').innerHTML = 
+        'உகந்த பயிர்கள்: <b>' + crop + '</b>';
+    }
+
+    // எளிய வானிலை API (demo)
+    async function getWeather() {
+      const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=11.0&longitude=78.0&current_weather=true');
+      const data = await res.json();
+      const temp = data.current_weather.temperature;
+      const wind = data.current_weather.windspeed;
+
+      document.getElementById('weather').innerHTML = 
+        `தற்போதைய வெப்பநிலை: ${temp}°C, காற்றின் வேகம்: ${wind} km/h`;
+    }
+  </script>
+</body>
+</html>
