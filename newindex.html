@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌾 ஸ்மார்ட் பயிர் ஆலோசனை</title>
+  <style>
+    body {
+      font-family: 'Noto Sans Tamil', sans-serif;
+      background-color: #f1ffe0;
+      margin: 0;
+      padding: 0;
+      color: #222;
+    }
+    header {
+      background: green;
+      color: white;
+      text-align: center;
+      padding: 15px;
+    }
+    h1 {
+      margin: 0;
+    }
+    .container {
+      padding: 20px;
+      text-align: center;
+    }
+    .card {
+      background: white;
+      padding: 15px;
+      margin: 15px auto;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      text-align: left;
+    }
+    label {
+      font-weight: bold;
+    }
+    input, select {
+      width: 95%;
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: green;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+    button:hover {
+      background: darkgreen;
+    }
+    .section-title {
+      background: #d6f7d6;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: bold;
+      color: #003300;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🌾 ஸ்மார்ட் பயிர் ஆலோசனை பயன்பாடு</h1>
+    <p>மண் pH, உரம், பூச்சி நாசினி மற்றும் வானிலை தகவல்கள் தமிழில்</p>
+  </header>
+
+  <div class="container">
+
+    <!-- Soil PH and Crop Recommendation -->
+    <div class="card">
+      <div class="section-title">மண் pH அடிப்படையிலான பயிர் பரிந்துரை</div>
+      <label>மண் pH மதிப்பு:</label>
+      <input type="number" id="ph" min="1" max="14" step="0.1" placeholder="உதா: 6.5">
+      <button onclick="recommendCrop()">பயிர் பரிந்துரை</button>
+      <p id="cropResult"></p>
+    </div>
+
+    <!-- Fertilizer Recommendation -->
+    <div class="card">
+      <div class="section-title">உரம் பரிந்துரை</div>
+      <label>பயிர்:</label>
+      <select id="fertCrop">
+        <option value="">-- பயிர் தேர்வு செய்க --</option>
+        <option value="நெல்">நெல்</option>
+        <option value="மக்காச்சோளம்">மக்காச்சோளம்</option>
+        <option value="தக்காளி">தக்காளி</option>
+        <option value="வேர்க்கடலை">வேர்க்கடலை</option>
+      </select>
+      <button onclick="fertilizerRecommend()">பரிந்துரை காண்க</button>
+      <p id="fertResult"></p>
+    </div>
+
+    <!-- Pesticide Recommendation -->
+    <div class="card">
+      <div class="section-title">பூச்சி நாசினி ஆலோசனை</div>
+      <label>பயிர்:</label>
+      <select id="pestCrop">
+        <option value="">-- பயிர் தேர்வு செய்க --</option>
+        <option value="நெல்">நெல்</option>
+        <option value="தக்காளி">தக்காளி</option>
+      </select>
+      <label>பிரச்சனை:</label>
+      <select id="pestProblem">
+        <option value="">-- பிரச்சனை தேர்வு செய்க --</option>
+        <option value="அபிட்">அபிட் தாக்கம்</option>
+        <option value="பிளைட்">பிளைட் / சுருண்ட நோய்</option>
+      </select>
+      <button onclick="pesticideRecommend()">பரிந்துரை</button>
+      <p id="pestResult"></p>
+    </div>
+
+    <!-- Weather Info -->
+    <div class="card">
+      <div class="section-title">வானிலை தகவல்</div>
+      <p>உங்கள் தற்போதைய வானிலை பார்க்க:</p>
+      <button onclick="getWeather()">வானிலை பெற</button>
+      <p id="weatherResult"></p>
+    </div>
+  </div>
+
+  <script>
+    // Crop Recommendation
+    function recommendCrop() {
+      const ph = parseFloat(document.getElementById('ph').value);
+      let result = '';
+      if (isNaN(ph)) {
+        result = 'மண் pH மதிப்பை உள்ளிடவும்.';
+      } else if (ph >= 6 && ph <= 7.5) {
+        result = 'உகந்த பயிர்கள்: நெல், மக்காச்சோளம், பருப்பு வகைகள்.';
+      } else if (ph < 6) {
+        result = 'உகந்த பயிர்கள்: கடலை, மிளகாய், வெண்டை.';
+      } else {
+        result = 'உகந்த பயிர்கள்: வெள்ளரி, கத்தரிக்காய், உருளைக்கிழங்கு.';
+      }
+      document.getElementById('cropResult').innerHTML = result;
+    }
+
+    // Fertilizer Recommendation
+    function fertilizerRecommend() {
+      const crop = document.getElementById('fertCrop').value;
+      let msg = '';
+      switch (crop) {
+        case 'நெல்':
+          msg = 'நெல்: NPK உரம் (20-20-10) பயன்படுத்தவும். pH < 6 என்றால் கற்பசம் (Lime) சேர்க்கவும்.';
+          break;
+        case 'மக்காச்சோளம்':
+          msg = 'மக்காச்சோளம்: உயர் நைட்ரஜன் உரம் (urea) மற்றும் பாஸ்பரஸ் சேர்க்கவும்.';
+          break;
+        case 'தக்காளி':
+          msg = 'தக்காளி: பாஸ்பரஸ் மற்றும் பொட்டாஷியம் அதிகம் கொண்ட உரம் பரிந்துரை.';
+          break;
+        case 'வேர்க்கடலை':
+          msg = 'வேர்க்கடலை: சமநிலை உரம் (10-10-10) மற்றும் நல்ல நீர் வடிகால்.';
+          break;
+        default:
+          msg = 'முதலில் பயிர் தேர்வு செய்க.';
+      }
+      document.getElementById('fertResult').innerText = msg;
+    }
+
+    // Pesticide Recommendation
+    function pesticideRecommend() {
+      const crop = document.getElementById('pestCrop').value;
+      const problem = document.getElementById('pestProblem').value;
+      let msg = '';
+      if (!crop || !problem) {
+        msg = 'முதலில் பயிர் மற்றும் பிரச்சனை தேர்வு செய்க.';
+      } else if (problem === 'அபிட்') {
+        msg = 'அபிட் தாக்கம்: இயற்கை நைச்சுரல் சோப்பால் தெளிகை அல்லது இமிடாக்ளோப்ரிட் பயன்பாடு.';
+      } else if (problem === 'பிளைட்') {
+        msg = 'பிளைட்: பாதிக்கப்பட்ட இலைகளை அகற்று; நம்பிக்கையான பூச்சி நாசினி (fungicide) பயன்படுத்தவும்.';
+      }
+      document.getElementById('pestResult').innerText = msg;
+    }
+
+    // Weather Info
+    async function getWeather() {
+      try {
+        const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=11.0&longitude=78.0&current_weather=true');
+        const data = await res.json();
+        const temp = data.current_weather.temperature;
+        const wind = data.current_weather.windspeed;
+        document.getElementById('weatherResult').innerText =
+          `தற்போதைய வெப்பநிலை: ${temp}°C, காற்று வேகம்: ${wind} km/h`;
+      } catch (e) {
+        document.getElementById('weatherResult').innerText = 'வானிலை தரவுகளை பெற முடியவில்லை.';
+      }
+    }
+  </script>
+</body>
+</html>
