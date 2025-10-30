@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ஸ்மார்ட் பயிர் ஆலோசனை</title>
+  <style>
+    body { font-family: 'Arial'; background-color: #f5f5dc; text-align: center; padding: 20px; }
+    .card { background: white; padding: 20px; margin-top: 20px; border-radius: 10px; box-shadow: 0 0 10px #ccc; }
+    input, select { padding: 10px; margin: 10px; border-radius: 5px; width: 80%; }
+    button { padding: 10px 20px; background-color: #2e7d32; color: white; border: none; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h1>🌾 ஸ்மார்ட் பயிர் ஆலோசனை</h1>
+  <div id="form">
+    <input type="text" id="name" placeholder="உங்கள் பெயர்" /><br />
+    <input type="text" id="place" placeholder="உங்கள் கிராமம்" /><br />
+    <select id="crop">
+      <option value="">பயிர் தேர்வு செய்க</option>
+      <option>நெல்</option>
+      <option>மக்காச்சோளம்</option>
+      <option>கரும்பு</option>
+      <option>பருத்தி</option>
+      <option>தக்காளி</option>
+      <option>வேர்க்கடலை</option>
+    </select><br />
+    <button onclick="register()">பதிவு செய்க</button>
+  </div>
+
+  <div id="result" class="card" style="display:none;"></div>
+
+  <script>
+    function register() {
+      const name = document.getElementById('name').value;
+      const place = document.getElementById('place').value;
+      const crop = document.getElementById('crop').value;
+      document.getElementById('form').style.display = 'none';
+      const msg = `
+        👋 வணக்கம் ${name}!<br/>
+        📍 இடம்: ${place}<br/>
+        🌱 தேர்ந்தெடுத்த பயிர்: ${crop}<br/>
+        💡 பரிந்துரை: இன்று மழை வாய்ப்பு உள்ளது. பாசனம் தவிர்க்கவும்.
+      `;
+      document.getElementById('result').innerHTML = msg;
+      document.getElementById('result').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
